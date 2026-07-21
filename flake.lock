@@ -1,0 +1,65 @@
+{
+  "nodes": {
+    "bacon-ls-fork": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1784420504,
+        "narHash": "sha256-Yas7gKjAP4JkE51Whsoor5FfrZGSwnYsVH7sBfZhR5E=",
+        "ref": "refs/heads/fix-130",
+        "rev": "df51f6b499f002d2980fb925517f858ff2466afa",
+        "revCount": 356,
+        "type": "git",
+        "url": "file:///home/_/projects/bacon-ls"
+      },
+      "original": {
+        "type": "git",
+        "url": "file:///home/_/projects/bacon-ls"
+      }
+    },
+    "nix-vscode-extensions": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1784603886,
+        "narHash": "sha256-AwdtZq1mpXZCfn+C2NOBTO7i0H4eGIj6dH9XXkO3Kus=",
+        "owner": "nix-community",
+        "repo": "nix-vscode-extensions",
+        "rev": "3bc93178a45e4327bdcf91f2c9158701937abdf3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nix-vscode-extensions",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1784497964,
+        "narHash": "sha256-vlHUuqAcbcH2RKmHbPiuQzbv1pnzzavXnI62RD0bqCU=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "241313f4e8e508cb9b13278c2b0fa25b9ca27163",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "bacon-ls-fork": "bacon-ls-fork",
+        "nix-vscode-extensions": "nix-vscode-extensions",
+        "nixpkgs": "nixpkgs"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
