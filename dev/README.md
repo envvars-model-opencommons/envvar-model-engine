@@ -88,6 +88,21 @@ sources that can drift. Keeping each key in exactly one place removes that.
 `.vscode/extensions.json` lists what it takes to work here, so a contributor
 opening the repo in their own editor is prompted once rather than guessing.
 
+## Conformance
+
+`cargo test` asserts what the schema *claims*. `dev/conformance.py` asserts what
+a foreign JSON Schema engine *does* with it — so the schema is not marked by the
+code that produced it.
+
+```sh
+cargo run -q -p argenv --example consumer > /tmp/example.json
+python3 dev/conformance.py /tmp/example.json api/v1/example.json
+```
+
+CI runs that same file. It lives here rather than inside the workflow because an
+embedded copy drifts the moment the model changes, and a workflow that has
+drifted only tells you on push — which is exactly how it first broke.
+
 ## Coverage
 
 ```sh

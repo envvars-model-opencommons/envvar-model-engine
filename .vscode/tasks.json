@@ -54,6 +54,14 @@
       "presentation": { "clear": true }
     },
     {
+      "label": "conformance",
+      "detail": "validate the schema with a third-party engine, as CI does",
+      "type": "shell",
+      "command": "cargo run -q -p argenv --example consumer > /tmp/example.json && python3 dev/conformance.py /tmp/example.json api/v1/example.json",
+      "problemMatcher": [],
+      "presentation": { "clear": true }
+    },
+    {
       "label": "coverage",
       "detail": "lcov into target/coverage, for the editor margin",
       "type": "shell",
@@ -65,7 +73,7 @@
       "label": "full gate",
       "detail": "everything CI runs, in order",
       "dependsOrder": "sequence",
-      "dependsOn": ["fmt --check", "clippy", "test", "docs"],
+      "dependsOn": ["fmt --check", "clippy", "test", "docs", "conformance"],
       "problemMatcher": [],
       "group": "build"
     }

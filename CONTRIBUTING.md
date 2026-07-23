@@ -14,6 +14,10 @@ cargo build --workspace --all-features
 cargo test  --workspace --all-features
 cargo fmt --all -- --check
 cargo clippy --workspace --all-features --all-targets -- -D warnings
+
+# the third-party schema check CI runs — the same file, not a copy of it
+cargo run -q -p argenv --example consumer > /tmp/example.json
+python3 dev/conformance.py /tmp/example.json api/v1/example.json
 ```
 
 ## The test suite is the specification

@@ -14,7 +14,7 @@ jobs:
     name: build, test, lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
@@ -22,13 +22,14 @@ jobs:
 
       - name: Format
         run: cargo fmt --all -- --check
+
+      # --all-targets so tests and examples are linted too: a lint that only
+      # fires in a test target is still a lint.
       - name: Clippy
-        # --all-targets so tests and examples are linted too: a lint that
-        # only fires in a test target is still a lint.
         run: cargo clippy --workspace --all-features --all-targets -- -D warnings
 
       # The suite covers the model's rules, reading, linting, the wire document,
-      # the emitted schema, the command-line tool, and that the artifacts
+      # the emitted schema, the command-line tool, and that the artefacts
       # committed to this repository are the ones the current model produces.
       - name: Test
         run: cargo test --workspace --all-features
@@ -42,7 +43,7 @@ jobs:
     name: minimum supported Rust version
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: dtolnay/rust-toolchain@1.75.0
       - run: cargo build --workspace --all-features
 
@@ -53,7 +54,7 @@ jobs:
     # foreign JSON Schema engine *does* with it, so the schema is not marked by
     # the code that produced it.
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
 
@@ -63,39 +64,4 @@ jobs:
       - name: Validate with a third-party engine
         run: |
           python3 -m pip install --quiet jsonschema
-          python3 - <<'PY'
-          import json, sys
-          from jsonschema import Draft202012Validator as V, ValidationError
-
-          schema = json.load(open("schema/argenv-contract.v1.schema.json"))
-          V.check_schema(schema)
-          print("the schema is a valid draft 2020-12 schema")
-
-          for path in ("/tmp/example.json", "api/v1/example.json"):
-              V(schema).validate(json.load(open(path)))
-              print(f"{path} validates")
-
-          doc = json.load(open("/tmp/example.json"))
-          rejected = {
-              "unknown type":      ("type", "nonsense"),
-              "unknown stability": ("stability", "sorta"),
-              "malformed version": ("since", "1.x"),
-              "malformed date":    ("reviewed", "2026-13-45"),
-              "unsettable name":   ("name", "BAD NAME"),
-          }
-          for label, (field, value) in rejected.items():
-              bad = json.loads(json.dumps(doc))
-              bad["vars"][0][field] = value
-              try:
-                  V(schema).validate(bad)
-              except ValidationError:
-                  print(f"rejected: {label}")
-              else:
-                  sys.exit(f"schema failed to reject: {label}")
-
-          # A field from a later version must not invalidate the document.
-          forward = json.loads(json.dumps(doc))
-          forward["vars"][0]["field_from_a_later_version"] = "x"
-          V(schema).validate(forward)
-          print("a document from a later version still validates")
-          PY
+          python3 dev/conformance.py /tmp/example.json api/v1/example.json
