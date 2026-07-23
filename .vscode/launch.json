@@ -1,0 +1,86 @@
+{
+  // Debugging only. Everything here builds through cargo and asks cargo where
+  // the binary landed, so no path is hardcoded and nothing can drift from a
+  // normal `cargo build`.
+  //
+  // For debugging a single test, prefer the "Debug" lens rust-analyzer puts
+  // above it: the configuration is generated for exactly that test, so there is
+  // nothing to keep in sync. These entries cover the cases a lens cannot: the
+  // CLI with chosen arguments, and the example.
+  //
+  // Requires the CodeLLDB extension, which the dev flake installs.
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "argenv CLI (prompt for arguments)",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": ["build", "--bin=argenv", "--package=argenv-cli"],
+        "filter": { "name": "argenv", "kind": "bin" }
+      },
+      "args": ["${input:cliArgs}"],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "argenv lint (the published example)",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": ["build", "--bin=argenv", "--package=argenv-cli"],
+        "filter": { "name": "argenv", "kind": "bin" }
+      },
+      "args": ["lint", "api/v1/example.json", "--", "--log-level", "warn"],
+      "env": { "MYAPP_HDR": "perhaps" },
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "example: consumer",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": ["build", "--example=consumer", "--package=argenv"],
+        "filter": { "name": "consumer", "kind": "example" }
+      },
+      "args": ["--log-level", "warn", "--hud", "fps"],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "unit tests (argenv lib)",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": ["test", "--no-run", "--lib", "--package=argenv", "--all-features"],
+        "filter": { "kind": "lib" }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "integration tests (prompt for file)",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": ["test", "--no-run", "--test=${input:testFile}", "--package=argenv", "--all-features"],
+        "filter": { "kind": "test" }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "cliArgs",
+      "type": "promptString",
+      "description": "Arguments for the argenv CLI",
+      "default": "check api/v1/example.json"
+    },
+    {
+      "id": "testFile",
+      "type": "pickString",
+      "description": "Which integration test file",
+      "options": ["scenario", "declaration", "reading", "linting", "document", "schema"],
+      "default": "scenario"
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  // These are the commands CI runs, verbatim. Nothing here is a parallel way of
+  // building or testing the project — running a task and running the same line
+  // in the terminal do the same thing. If a command changes here, it changes in
+  // .github/workflows/ci.yml too.
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "test",
+      "detail": "cargo test --workspace --all-features",
+      "type": "shell",
+      "command": "cargo test --workspace --all-features",
+      "group": { "kind": "test", "isDefault": true },
+      "problemMatcher": ["$rustc"],
+      "presentation": { "clear": true }
+    },
+    {
+      "label": "clippy",
+      "detail": "the lint gate CI enforces",
+      "type": "shell",
+      "command": "cargo clippy --workspace --all-features --all-targets -- -D warnings",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": ["$rustc"],
+      "presentation": { "clear": true }
+    },
+    {
+      "label": "fmt",
+      "detail": "cargo fmt --all",
+      "type": "shell",
+      "command": "cargo fmt --all",
+      "problemMatcher": []
+    },
+    {
+      "label": "fmt --check",
+      "detail": "as CI checks it",
+      "type": "shell",
+      "command": "cargo fmt --all -- --check",
+      "problemMatcher": []
+    },
+    {
+      "label": "docs",
+      "detail": "rustdoc with warnings as errors",
+      "type": "shell",
+      "command": "cargo doc --no-deps -p argenv --all-features",
+      "options": { "env": { "RUSTDOCFLAGS": "-D warnings" } },
+      "problemMatcher": ["$rustc"]
+    },
+    {
+      "label": "regenerate contract",
+      "detail": "emit the schema and the example, then copy to api/",
+      "type": "shell",
+      "command": "cargo run -p argenv-cli -- schema -o schema/argenv-contract.v1.schema.json && cp schema/argenv-contract.v1.schema.json api/v1/contract.schema.json && cargo run -q -p argenv --example consumer > api/v1/example.json",
+      "problemMatcher": ["$rustc"],
+      "presentation": { "clear": true }
+    },
+    {
+      "label": "coverage",
+      "detail": "lcov into target/coverage, for the editor margin",
+      "type": "shell",
+      "command": "coverage",
+      "problemMatcher": [],
+      "presentation": { "clear": true }
+    },
+    {
+      "label": "full gate",
+      "detail": "everything CI runs, in order",
+      "dependsOrder": "sequence",
+      "dependsOn": ["fmt --check", "clippy", "test", "docs"],
+      "problemMatcher": [],
+      "group": "build"
+    }
+  ]
+}

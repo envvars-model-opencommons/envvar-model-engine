@@ -5,3 +5,4 @@ Cargo.lock
 .ide/
 result
 result-*
+.vscode/settings.json
