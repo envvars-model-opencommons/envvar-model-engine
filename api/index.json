@@ -1,0 +1,21 @@
+{
+  "name": "ArgEnv contract API",
+  "description": "Static GET endpoints serving the ArgEnv contract schema and examples.",
+  "contract_version": 1,
+  "generated": "2026-07-23T09:19:52Z",
+  "endpoints": {
+    "schema_latest": "https://argenv-opencommons.github.io/argenv/v1/contract.schema.json",
+    "schema_v1": "https://argenv-opencommons.github.io/argenv/v1/contract.schema.json",
+    "example_v1": "https://argenv-opencommons.github.io/argenv/v1/example.json",
+    "index": "https://argenv-opencommons.github.io/argenv/index.json"
+  },
+  "versions": [
+    {
+      "version": 1,
+      "status": "current",
+      "schema": "https://argenv-opencommons.github.io/argenv/v1/contract.schema.json"
+    }
+  ],
+  "source": "https://github.com/argenv-opencommons/argenv",
+  "license": "MIT OR Apache-2.0"
+}

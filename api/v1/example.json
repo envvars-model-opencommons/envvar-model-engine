@@ -1,0 +1,186 @@
+{
+  "contract_version": 1,
+  "generated": "2026-07-23T10:24:02Z",
+  "inputs": [
+    {
+      "allowed": [
+        "trace",
+        "debug",
+        "info",
+        "warn",
+        "error",
+        "none"
+      ],
+      "arg": {
+        "arity": 1,
+        "long": "log-level",
+        "negatable": false,
+        "repeatable": false,
+        "short": "l",
+        "value_name": "LEVEL"
+      },
+      "default": "info",
+      "env": {
+        "name": "MYAPP_LOG_LEVEL"
+      },
+      "example": "--log-level warn",
+      "group": "logging",
+      "key": "log_level",
+      "required": false,
+      "reviewed": "2026-07-21",
+      "since": "0.1.0",
+      "stability": "stable",
+      "summary": "Log verbosity",
+      "type": "enum"
+    },
+    {
+      "allowed": [],
+      "arg": {
+        "arity": 0,
+        "long": "hdr",
+        "negatable": true,
+        "repeatable": false
+      },
+      "default": false,
+      "env": {
+        "name": "MYAPP_HDR"
+      },
+      "example": "--hdr",
+      "group": "display",
+      "key": "hdr",
+      "maps_to": "display.enableHDR",
+      "observe": "hdr_enabled",
+      "required": false,
+      "reviewed": "2026-07-21",
+      "since": "0.1.0",
+      "stability": "stable",
+      "summary": "Expose HDR output to the application",
+      "type": "bool"
+    },
+    {
+      "allowed": [
+        "fps",
+        "frametimes",
+        "gpuload",
+        "memory",
+        "version"
+      ],
+      "arg": {
+        "arity": 1,
+        "long": "hud",
+        "negatable": false,
+        "repeatable": true,
+        "value_name": "ELEMENT"
+      },
+      "env": {
+        "name": "MYAPP_HUD"
+      },
+      "example": "--hud fps --hud gpuload",
+      "group": "display",
+      "key": "hud",
+      "required": false,
+      "reviewed": "2026-07-21",
+      "separators": [
+        ",",
+        ";"
+      ],
+      "since": "0.1.0",
+      "stability": "stable",
+      "summary": "Overlay elements to display",
+      "type": "list"
+    },
+    {
+      "allowed": [],
+      "env": {
+        "aliases": [
+          "MYAPP_LOGFILE"
+        ],
+        "name": "MYAPP_LOG_PATH"
+      },
+      "group": "logging",
+      "key": "log_path",
+      "required": false,
+      "stability": "unknown",
+      "type": "path"
+    },
+    {
+      "allowed": [],
+      "arg": {
+        "arity": 1,
+        "long": "render-scale",
+        "negatable": false,
+        "repeatable": false,
+        "value_name": "FACTOR"
+      },
+      "default": 1.0,
+      "example": "--render-scale 0.75",
+      "group": "display",
+      "key": "render_scale",
+      "required": false,
+      "reviewed": "2026-07-21",
+      "since": "0.1.0",
+      "stability": "stable",
+      "summary": "Internal render scale before upscaling",
+      "type": "float"
+    },
+    {
+      "allowed": [
+        "auto",
+        "on",
+        "off"
+      ],
+      "arg": {
+        "arity": 1,
+        "long": "accel",
+        "negatable": false,
+        "repeatable": false,
+        "value_name": "MODE"
+      },
+      "default": "auto",
+      "env": {
+        "name": "MYAPP_ACCEL"
+      },
+      "example": "--accel auto",
+      "group": "display",
+      "key": "accel",
+      "required": false,
+      "reviewed": "2026-07-21",
+      "since": "0.1.0",
+      "stability": "stable",
+      "summary": "Hardware acceleration; auto enables it when available",
+      "type": "enum"
+    },
+    {
+      "allowed": [],
+      "arg": {
+        "arity": 0,
+        "long": "profile",
+        "negatable": false,
+        "repeatable": false
+      },
+      "default": false,
+      "deprecation": {
+        "migration": "use --hud gpuload,frametimes instead",
+        "replaced_by": "hud",
+        "since": "0.1.0"
+      },
+      "env": {
+        "name": "MYAPP_PROFILE"
+      },
+      "group": "display",
+      "key": "profile",
+      "required": false,
+      "reviewed": "2026-07-21",
+      "since": "0.1.0",
+      "stability": "deprecated",
+      "summary": "Deprecated profiling overlay",
+      "type": "bool"
+    }
+  ],
+  "precedence": [
+    "arg",
+    "env",
+    "default"
+  ],
+  "source": "myapp@a1b2c3d"
+}

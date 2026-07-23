@@ -1,0 +1,269 @@
+{
+  "$id": "https://argenv-opencommons.github.io/argenv/v1/contract.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "definitions": {
+    "ArgBinding": {
+      "description": "How a value may arrive from the argument vector.",
+      "properties": {
+        "arity": {
+          "description": "How many values the flag consumes: 0 for a boolean whose presence is the value, 1 otherwise. Derived from the type and written out explicitly so no consumer has to re-derive it.",
+          "format": "uint8",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "long": {
+          "description": "The long form, without dashes.",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "negatable": {
+          "default": false,
+          "description": "Whether --no-<long> is accepted.",
+          "type": "boolean"
+        },
+        "repeatable": {
+          "default": false,
+          "description": "Whether the flag may be repeated, accumulating values.",
+          "type": "boolean"
+        },
+        "short": {
+          "description": "The short form, without its dash.",
+          "pattern": "^[A-Za-z0-9]$",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "value_name": {
+          "description": "The placeholder shown in help for the value.",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "arity"
+      ],
+      "type": "object"
+    },
+    "EnvBinding": {
+      "description": "How a value may arrive from the environment.",
+      "properties": {
+        "aliases": {
+          "description": "Other names still honoured, so a legacy name is recognised rather than reported as a mistake.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "name": {
+          "description": "The variable name.",
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "A declared, machine-readable contract for a program's invocation surface: its argument vector and its environment.",
+  "properties": {
+    "contract_version": {
+      "const": 1,
+      "description": "Major version of this contract format.",
+      "type": "integer"
+    },
+    "generated": {
+      "description": "Emission timestamp (RFC 3339, UTC). Stamped by the emitter.",
+      "format": "date-time",
+      "type": "string"
+    },
+    "inputs": {
+      "description": "Every input this program accepts.",
+      "items": {
+        "additionalProperties": true,
+        "description": "One input a program accepts, and the doors it can arrive through.",
+        "properties": {
+          "allowed": {
+            "default": [],
+            "description": "Accepted tokens; meaningful for the enum and list kinds.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "arg": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/ArgBinding"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "How the value may arrive from the argument vector."
+          },
+          "default": {
+            "description": "Value used when nothing supplies the input, in its natural JSON form."
+          },
+          "deprecation": {
+            "description": "Present only when stability is deprecated: when, what replaces it, and how to migrate."
+          },
+          "env": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/EnvBinding"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "How the value may arrive from the environment."
+          },
+          "example": {
+            "description": "A copy-pasteable usage example.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "group": {
+            "description": "Free-form grouping tag for documentation and help output.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "key": {
+            "description": "Transport-free identity of the input, snake_case. The join key across every source and every generated binding.",
+            "pattern": "^[a-z][a-z0-9_]*$",
+            "type": "string"
+          },
+          "maps_to": {
+            "description": "A namespaced key in another configuration surface this input bridges to.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "modified": {
+            "description": "Date the declaration was last edited. Stamped by tooling from version control, never hand-written.",
+            "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "observe": {
+            "description": "A field in the program's resolved-configuration output that this input visibly changes; the hook for confirming a declaration empirically.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "required": {
+            "default": false,
+            "description": "Whether the program requires this input.",
+            "type": "boolean"
+          },
+          "reviewed": {
+            "description": "Date a human last verified this entry. Hand-written: it asserts human judgement that cannot be derived.",
+            "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "separators": {
+            "description": "Characters that separate items in a list value, so a consumer can split it.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "since": {
+            "description": "Version in which the input was introduced.",
+            "pattern": "^\\d+(\\.\\d+){0,2}([-+][0-9A-Za-z.-]+)?$",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source": {
+            "description": "Project and revision this record came from; populated when records from several documents are merged.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "stability": {
+            "default": "unknown",
+            "description": "How much a consumer may rely on this input.",
+            "enum": [
+              "unknown",
+              "stable",
+              "experimental",
+              "debug",
+              "deprecated"
+            ]
+          },
+          "summary": {
+            "description": "What the input does, in prose.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "type": {
+            "description": "The kind of value. Also fixes how many values the argument form takes: none for bool, one otherwise.",
+            "enum": [
+              "string",
+              "bool",
+              "enum",
+              "list",
+              "uint",
+              "int",
+              "float",
+              "path"
+            ]
+          }
+        },
+        "required": [
+          "key",
+          "type"
+        ],
+        "title": "Input record",
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "precedence": {
+      "description": "Which binding wins when more than one supplies a value, strongest first.",
+      "items": {
+        "enum": [
+          "arg",
+          "env",
+          "default"
+        ]
+      },
+      "type": "array"
+    },
+    "source": {
+      "description": "Emitting project and revision, e.g. \"myapp@a1b2c3d\". Stamped by the build.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "contract_version",
+    "inputs"
+  ],
+  "title": "ArgEnv contract",
+  "type": "object"
+}

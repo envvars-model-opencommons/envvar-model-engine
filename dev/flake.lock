@@ -1,21 +1,5 @@
 {
   "nodes": {
-    "bacon-ls-fork": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1784420504,
-        "narHash": "sha256-Yas7gKjAP4JkE51Whsoor5FfrZGSwnYsVH7sBfZhR5E=",
-        "ref": "refs/heads/fix-130",
-        "rev": "df51f6b499f002d2980fb925517f858ff2466afa",
-        "revCount": 356,
-        "type": "git",
-        "url": "file:///home/_/projects/bacon-ls"
-      },
-      "original": {
-        "type": "git",
-        "url": "file:///home/_/projects/bacon-ls"
-      }
-    },
     "nix-vscode-extensions": {
       "inputs": {
         "nixpkgs": [
@@ -23,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1784603886,
-        "narHash": "sha256-AwdtZq1mpXZCfn+C2NOBTO7i0H4eGIj6dH9XXkO3Kus=",
+        "lastModified": 1784777292,
+        "narHash": "sha256-yByCAxOZHq2b6Wr49kw5RwkYmTrJK9CGSpKJ5zsl29A=",
         "owner": "nix-community",
         "repo": "nix-vscode-extensions",
-        "rev": "3bc93178a45e4327bdcf91f2c9158701937abdf3",
+        "rev": "2879a232de7b66d9b19a393ae63af8cfd70981db",
         "type": "github"
       },
       "original": {
@@ -54,7 +38,6 @@
     },
     "root": {
       "inputs": {
-        "bacon-ls-fork": "bacon-ls-fork",
         "nix-vscode-extensions": "nix-vscode-extensions",
         "nixpkgs": "nixpkgs"
       }

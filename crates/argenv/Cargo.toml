@@ -1,0 +1,25 @@
+[package]
+name = "argenv"
+description = "A declared, typed contract for a program's invocation surface — argv and envp. The declaration is the accessor, so schema and code cannot drift."
+keywords = ["cli", "env", "arguments", "schema", "contract"]
+categories = ["command-line-interface", "config", "development-tools"]
+readme = "README.md"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+schemars = { workspace = true, optional = true }
+
+[features]
+default = []
+# Enables `contract::json_schema()` — the cross-language JSON Schema emission.
+contract = ["dep:schemars"]
+
+[package.metadata.docs.rs]
+all-features = true
