@@ -47,75 +47,24 @@
         ];
       };
 
-      # Rewritten on every launch so the store paths below stay fresh.
+      # Only what cannot live in .vscode/settings.json: store paths, which are
+      # machine-specific, and personal preferences. Everything project-level is
+      # committed in .vscode/settings.json so contributors without Nix get it
+      # too — and is deliberately absent here, because workspace settings
+      # override these and duplication would mean two copies that can drift.
       settings = pkgs.writeText "settings.json" (builtins.toJSON {
         "telemetry.telemetryLevel" = "off";
         "update.mode" = "none";
         "extensions.autoCheckUpdates" = false;
         "security.workspace.trust.enabled" = false;
 
-        # --- Rust ---
         "rust-analyzer.server.path" = "${pkgs.rust-analyzer}/bin/rust-analyzer";
         "rust-analyzer.rustfmt.overrideCommand" = [ "${pkgs.rustfmt}/bin/rustfmt" ];
-        # CI runs `clippy -D warnings`; surface the same lints while typing rather
-        # than discovering them on push.
-        "rust-analyzer.check.command" = "clippy";
-        "rust-analyzer.check.extraArgs" = [ "--" "-D" "warnings" ];
-        # The `contract` feature gates the schema emitter and its tests. Without
-        # this, contract.rs and tests/schema.rs are greyed out and unanalysed.
-        "rust-analyzer.cargo.features" = "all";
-        "rust-analyzer.check.features" = "all";
-        # Keep the analyser out of ./target so it does not fight the terminal for
-        # the build lock.
-        "rust-analyzer.cargo.targetDir" = true;
 
-        # Populate the native Testing sidebar (the beaker icon) with every test:
-        # a tree you can filter, re-run, and re-run-failed. Still marked
-        # experimental upstream, which is why it is off by default.
-        "rust-analyzer.testExplorer" = true;
-        # The `contract` feature gates tests/schema.rs. Without this the buttons
-        # and the Testing panel would run a subset and quietly report success.
-        "rust-analyzer.runnables.extraArgs" = [ "--all-features" ];
-
-        # --- coverage ---
-        # `coverage` writes lcov here; press "Watch" in the Coverage Gutters
-        # status bar to paint covered and uncovered lines in the margin.
-        "coverage-gutters.coverageFileNames" = [ "target/coverage/lcov.info" "lcov.info" ];
-        "coverage-gutters.showLineCoverage" = true;
-        "coverage-gutters.showGutterCoverage" = true;
-        "coverage-gutters.showRulerCoverage" = true;
-
-        "[rust]" = {
-          "editor.defaultFormatter" = "rust-lang.rust-analyzer";
-          "editor.formatOnSave" = true;
-        };
-
-        # --- Nix (this flake) ---
         "nix.enableLanguageServer" = true;
         "nix.serverPath" = "${pkgs.nil}/bin/nil";
         "nix.serverSettings" = {
           nil.formatting.command = [ "${pkgs.nixpkgs-fmt}/bin/nixpkgs-fmt" ];
-        };
-        "[nix]" = {
-          "editor.defaultFormatter" = "jnoortheen.nix-ide";
-          "editor.formatOnSave" = true;
-        };
-
-        # --- generated artefacts are read-only by convention ---
-        # schema/ and api/ are emitted by `argenv schema`; a test fails if a
-        # hand edit makes them disagree with the model.
-        "files.readonlyInclude" = {
-          "schema/**" = true;
-          "api/v1/**" = true;
-        };
-
-        "files.associations" = {
-          ".envrc" = "shellscript";
-        };
-        "files.exclude" = {
-          "**/target" = true;
-          "**/.direnv" = true;
-          "**/.ide" = true;
         };
       });
 

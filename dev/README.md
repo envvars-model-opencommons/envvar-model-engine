@@ -65,9 +65,19 @@ keep in sync. `launch.json` covers what a lens cannot — the CLI with arguments
 you choose, and the example. Every entry builds through cargo and asks cargo
 where the binary landed, so no path is hardcoded.
 
-Editor settings are **not** committed: the flake generates them on every launch,
-which is why `.vscode/settings.json` is ignored. Persistent editor configuration
-belongs in `dev/flake.nix`.
+**Settings are split by nature, not duplicated.**
+
+| Where | What | Why |
+|---|---|---|
+| `.vscode/settings.json` (committed) | features, clippy-as-check, runnable args, read-only artefacts, coverage path | portable, and project-essential: without them a contributor without Nix gets analysis missing the `contract` feature, and eight tests silently do not run |
+| `dev/flake.nix` (generated per launch) | language-server and formatter paths, telemetry, updates | machine-specific — store paths cannot be committed |
+
+No key appears in both. VS Code lets workspace settings override user settings,
+so anything in both files would mean the committed copy silently wins — two
+sources that can drift. Keeping each key in exactly one place removes that.
+
+`.vscode/extensions.json` lists what it takes to work here, so a contributor
+opening the repo in their own editor is prompted once rather than guessing.
 
 ## Coverage
 

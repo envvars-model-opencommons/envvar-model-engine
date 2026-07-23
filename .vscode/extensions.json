@@ -1,0 +1,15 @@
+{
+  // What it takes to work on this repository. Contributors using the dev flake
+  // get these baked into an isolated editor; everyone else is prompted once.
+  "recommendations": [
+    "rust-lang.rust-analyzer",
+    "tamasfe.even-better-toml",
+    "serayuzgur.crates",
+    "vadimcn.vscode-lldb",
+    "ryanluker.vscode-coverage-gutters",
+    "davidanson.vscode-markdownlint",
+    "redhat.vscode-yaml",
+    "jnoortheen.nix-ide",
+    "mkhl.direnv"
+  ]
+}

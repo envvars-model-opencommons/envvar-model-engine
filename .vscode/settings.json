@@ -1,0 +1,59 @@
+{
+  // Project settings, portable to any editor setup — no machine paths, no
+  // personal preferences. Committed on purpose: without them a contributor who
+  // clones and opens the repo gets analysis without the `contract` feature, and
+  // eight tests silently do not run.
+  //
+  // Machine-specific settings (language-server paths, telemetry, updates) live
+  // in dev/flake.nix and are written per launch. Nothing is duplicated: VS Code
+  // lets workspace settings override user settings, so a key in both files
+  // would mean this one silently wins.
+
+  // --- Rust ---
+  // The `contract` feature gates the schema emitter and tests/schema.rs.
+  "rust-analyzer.cargo.features": "all",
+  "rust-analyzer.check.features": "all",
+  // ...and the test buttons and Testing panel must run with it too, or they
+  // report success over a subset.
+  "rust-analyzer.runnables.extraArgs": ["--all-features"],
+  // CI gates on clippy, so surface the same lints while typing.
+  "rust-analyzer.check.command": "clippy",
+  "rust-analyzer.check.extraArgs": ["--", "-D", "warnings"],
+  // Keep the analyser out of ./target so it does not fight the terminal for the
+  // build lock.
+  "rust-analyzer.cargo.targetDir": true,
+  // The native Testing sidebar (beaker icon). Experimental upstream.
+  "rust-analyzer.testExplorer": true,
+
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer",
+    "editor.formatOnSave": true
+  },
+  "[nix]": {
+    "editor.defaultFormatter": "jnoortheen.nix-ide",
+    "editor.formatOnSave": true
+  },
+
+  // --- generated artefacts ---
+  // schema/ and api/v1/ are emitted by `argenv schema`; a test fails if a hand
+  // edit makes them disagree with the model. Regenerate instead of typing.
+  "files.readonlyInclude": {
+    "schema/**": true,
+    "api/v1/**": true
+  },
+
+  // --- coverage ---
+  // `coverage` (or cargo llvm-cov) writes here; press Watch in the Coverage
+  // Gutters status bar.
+  "coverage-gutters.coverageFileNames": ["target/coverage/lcov.info", "lcov.info"],
+  "coverage-gutters.showLineCoverage": true,
+  "coverage-gutters.showGutterCoverage": true,
+  "coverage-gutters.showRulerCoverage": true,
+
+  "files.associations": { ".envrc": "shellscript" },
+  "files.exclude": {
+    "**/target": true,
+    "**/.direnv": true,
+    "**/.ide": true
+  }
+}
