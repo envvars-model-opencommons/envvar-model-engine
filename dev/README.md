@@ -16,6 +16,15 @@ code .                 # the isolated editor  (or: code-dev .)
 `.envrc` points direnv at this directory, so the shell loads whenever you enter
 the repository.
 
+After editing `dev/flake.nix`, re-run `initdirenv.sh` or `direnv reload`.
+`direnv allow` alone is not enough: it only marks `.envrc` as trusted, and
+`.envrc` has not changed, so direnv reuses what it cached and the edit appears
+to have done nothing.
+
+An editor that is **already open** keeps the extension set it was launched with —
+that set is baked into the VSCodium build. After adding or removing an extension,
+close it and run `code .` again.
+
 ## What is in the shell
 
 | | |

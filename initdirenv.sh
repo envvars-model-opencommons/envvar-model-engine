@@ -34,10 +34,25 @@ echo "🔒 Locking the dev flake (creates or refreshes dev/flake.lock)..."
 nix "${nixflags[@]}" flake lock ./dev
 
 echo "✅ Allowing direnv for this project..."
-direnv allow "$root"
+direnv allow .
+
+# Force a re-evaluation rather than reusing what direnv cached.
+#
+# `direnv allow` only marks .envrc as trusted. Editing dev/flake.nix does not
+# change .envrc, so without this an existing environment is reused and a new
+# tool or editor extension never appears — the change looks like it did nothing.
+echo "♻️  Reloading direnv..."
+if ! direnv reload 2>/dev/null; then
+    touch .envrc # fallback: a newer mtime makes the next prompt re-evaluate
+fi
 
 echo "🏗️  Building the dev shell (the first run downloads the editor and extensions)..."
-direnv exec "$root" true
+direnv exec . true
 
+echo
 echo "✨ Ready — open the isolated editor with:  code .   (or: code-dev .)"
-echo "   The environment auto-loads at your next prompt here, or run: direnv reload"
+echo
+echo "   The environment auto-loads at your next prompt here."
+echo "   Note: an editor that is already open keeps the extension set it was"
+echo "   launched with, because that set is baked into the build. After changing"
+echo "   dev/flake.nix, close it and run 'code .' again."
